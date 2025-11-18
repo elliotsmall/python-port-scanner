@@ -16,8 +16,8 @@ def portScannerMultithread(target, portStart, portEnd, max_workers=100):
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {
-            executor.submit(portScanner, target, port): portScanner
-            for port in range(portStart, portEnd)
+            executor.submit(portScanner, target, port): port
+            for port in range(portStart, portEnd + 1)
         }
 
         for future in as_completed(futures): 
@@ -29,6 +29,7 @@ def portScannerMultithread(target, portStart, portEnd, max_workers=100):
 target = input("Enter target IP address: ") # Get target from user
 portStart = int(input("Enter starting port number: ")) # Get starting port from user
 portEnd = int(input("Enter ending port number: ")) # Get ending port from user
-openPorts = portScannerMultithread(target, portStart, portEnd) # Call the portScanner function
+maxThreads = int(input("Enter maximum number of threads (default 100): ") or 100) # Get max threads from user
+openPorts = portScannerMultithread(target, portStart, portEnd, maxThreads) # Call the portScanner function
 print(f"Open ports on {target}: {openPorts}") # Print the list of open
 
